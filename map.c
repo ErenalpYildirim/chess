@@ -61,6 +61,8 @@ int main()
 
     show_map(map[8][8]);
 
+    printf("Erenalp\n");
+
 
 }
 
