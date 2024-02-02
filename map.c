@@ -25,7 +25,7 @@ int main()
             
                     if (map[i+1][j+1]==0 && j!=7){
                         map[i+1][j+1]=7;}
-                
+                                                                        //sadece 0'a bakması için ayarlandı. -7 çarpışması eklenecek                          
 
                     if( map[i+1][j-1]==0 && j!=0){
                         map[i+1][j-1]=7;}
@@ -34,11 +34,66 @@ int main()
                 case -6:
                     if (map[i-1][j-1]==0 && j!=0){
                         map[i-1][j-1]=-7;}
-                    if( map[i-1][j+1]==0 && j!=7){
+                    if( map[i-1][j+1]==0 && j!=7){                      //sadece 0'a bakması için ayarlandı. +7 çarpışması eklenecek                        
                         map[i-1][j+1]=-7;}
                     break;
                 
                 case 5:
+                    if(map[i+2][j-1]==0 &&j!=0&&i<6){
+                        map[i+2][j-1]=7;
+                    }
+                    if(map[i+2][j+1]==0 &&j!=7&&i<6){
+                        map[i+2][j+1]=7;
+                    }
+                    if(map[i-2][j-1]==0 &&j!=0&&i>1){
+                        map[i-2][j-1]=7;
+                    }
+                    if(map[i-2][j+1]==0 &&j!=7&&i>1){                   //sadece 0'a bakması için ayarlandı. -7 çarpışması eklenecek
+                        map[i+2][j+1]=7;
+                    }
+                    if(map[i+1][j-2]==0 &&j>1&&i!=7){
+                        map[i+1][j-2]=7;
+                    }
+                    if(map[i+1][j+2]==0 &&j<6&&i!=7){
+                        map[i+1][j+2]=7;
+                    }
+                    if(map[i-1][j+2]==0 &&j<6&&i!=0){
+                        map[i-1][j+2]=7;
+                    }
+                    if(map[i-1][j-2]==0 &&j>1&&i!=0){
+                        map[i-1][j-2]=7;
+                    }
+
+                    break;
+
+                    case -5:
+                    if(map[i+2][j-1]==0 &&j!=0&&i<6){
+                        map[i+2][j-1]=-7;
+                    }
+                    if(map[i+2][j+1]==0 &&j!=7&&i<6){
+                        map[i+2][j+1]=-7;
+                    }
+                    if(map[i-2][j-1]==0 &&j!=0&&i>1){
+                        map[i-2][j-1]=-7;
+                    }
+                    if(map[i-2][j+1]==0 &&j!=7&&i>1){                   //sadece 0'a bakması için ayarlandı. +7 çarpışması eklenecek
+                        map[i+2][j+1]=-7;
+                    }
+                    if(map[i+1][j-2]==0 &&j>1&&i!=7){
+                        map[i+1][j-2]=-7;
+                    }
+                    if(map[i+1][j+2]==0 &&j<6&&i!=7){
+                        map[i+1][j+2]=-7;
+                    }
+                    if(map[i-1][j+2]==0 &&j<6&&i!=0){
+                        map[i-1][j+2]=-7;
+                    }
+                    if(map[i-1][j-2]==0 &&j>1&&i!=0){
+                        map[i-1][j-2]=-7;
+                    }
+
+                    break;
+                             
                     
                 
 
@@ -51,28 +106,21 @@ int main()
         
     }
     
-    for(int i=0;i<8;i++){
-        for(int j=0;j<8;j++){
-            printf("%d ",map[i][j]);
-        }
-        printf("\n");
-        
-    }
+    
+    show_map(map);
 
-    show_map(map[8][8]);
-
-    printf("Erenalp\n");
-
+    return 0;
 
 }
 
 void show_map(int map[8][8]){
+    printf("\nh  g  f  e  d  c  b  a\n______________________\n");
 
     for(int i=0;i<8;i++){
         for(int j=0;j<8;j++){
-            printf("%d ",map[i][j]);
+            printf("%d  ",map[i][j]);
         }
-        printf("\n");
+        printf("    | %d\n",i+1);
         
     }
 
