@@ -1,2 +1,2 @@
 # chess
-chess making
+chess making in C
