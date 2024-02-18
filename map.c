@@ -21,7 +21,7 @@ const int BLACK_KING =-1;
 
 
 
-void show_map(int chessBoard[8][8]);
+void displayBoard(int chessBoard[8][8]);
 
 void processPawnMoves(int color,int chessBoard[8][8],int row,int column);
 
@@ -52,10 +52,10 @@ int main()
                     break;
 
                 case -6:
-                    if (map[i-1][j-1]==0 && j!=0){
-                        map[i-1][j-1]=-7;}
-                    if( map[i-1][j+1]==0 && j!=7){                      //sadece 0'a bakması için ayarlandı. +7 çarpışması eklenecek                        
-                        map[i-1][j+1]=-7;}
+                    if (chessBoard[row-1][column-1]==0 && column!=0){
+                        chessBoard[row-1][column-1]=-7;}
+                    if( chessBoard[row-1][column+1]==0 && column!=7){                                             
+                        chessBoard[row-1][column+1]=-7;}
                     break;
                 
                 case WHITE_KNIGHT:
