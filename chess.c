@@ -42,16 +42,14 @@ const int BLACK_ROOK = -3;
 const int BLACK_QUEEN = -2;
 const int BLACK_KING =-1;
 
-const int WHITE_SQ=7;
-const int BLACK_SQ=-7;
+
 const int EMPTY_SQ=0;
-const int GREY_SQ=10;
 
 void displayBoard(int chessBoard[8][8]);
 
 int processPawnMoves(int color,int chessBoard[8][8],int row_i,int column_i,int row_f,int column_f);
 
-int processKnightMoves(int color,int chessBoard[8][8],int row,int column);
+int processKnightMoves(int color,int chessBoard[8][8],int row,int column,int row_f,int column_f);
 
 int white_in_check(int chessBoard[8][8]);
 int black_in_check(int chessBoard[8][8]);
@@ -92,7 +90,7 @@ int main()
             int column_i=init%8;
             int row_i=(init-column_i)/8;
             if(chessBoard[row_i][column_i]<=0){
-                printf("Wrong piece! Try again.\n");
+                printf("Wrong piece! Try again.\n"); 
                 continue;
             }
             else{
@@ -116,6 +114,20 @@ int main()
                     }
 
 
+                }
+                else if(chessBoard[row_i][column_i]==WHITE_KNIGHT && processKnightMoves(WHITE_KNIGHT,chessBoard,row_i,column_i,row_f,column_f)){
+                    chessBoard[row_i][column_i]=0;
+                    chessBoard[row_f][column_f]=WHITE_KNIGHT;
+
+                    if(white_in_check(chessBoard)){
+                        printf("Illegal move! Try again.\n");
+                        for(int i=0;i<8;i++){
+                            for(int j=0;j<8;j++){
+                                chessBoard[i][j]=restore[i][j];
+                            }
+                        }
+                        continue;
+                    }
                 }
 
             }
@@ -153,6 +165,21 @@ int main()
                     }
 
                 }
+                else if(chessBoard[row_i][column_i]==BLACK_KNIGHT && processKnightMoves(BLACK_KNIGHT,chessBoard,row_i,column_i,row_f,column_f)){
+                    chessBoard[row_i][column_i]=0;
+                    chessBoard[row_f][column_f]=BLACK_KNIGHT;
+
+                    if(white_in_check(chessBoard)){
+                        printf("Illegal move! Try again.\n");
+                        for(int i=0;i<8;i++){
+                            for(int j=0;j<8;j++){
+                                chessBoard[i][j]=restore[i][j];
+                            }
+                        }
+                        continue;
+                    }
+
+                }
 
                 }
             }
@@ -176,7 +203,7 @@ int main()
 }
 
 void displayBoard(int chessBoard[8][8]){
-    printf("\nh  g  f  e  d  c  b  a\n______________________\n");
+    printf("\n h   g   f   e   d   c   b   a\n______________________________\n");
 
     for(int row=0;row<8;row++){
         for(int column=0;column<8;column++){
@@ -187,150 +214,118 @@ void displayBoard(int chessBoard[8][8]){
                 printf("%d  ",chessBoard[row][column]);
             }
         }
-        printf("    | %d\n",row+1);
+        printf("| %d\n",row+1);
         
     }
 }
 
-int processKnightMoves(int color,int chessBoard[8][8],int row,int column){
+int processKnightMoves(int color,int chessBoard[8][8],int row_i,int column_i,int row_f,int column_f){
 
     
         if(color==BLACK_KNIGHT){
-            if(column!=0 && row<6){
-                if(chessBoard[row+2][column-1]==WHITE_SQ){
-                    chessBoard[row+2][column-1]=GREY_SQ;
+            if(column_i!=0 && row_i<6){
+                if(chessBoard[row_i+2][column_i-1]>=0 && chessBoard[row_i+2][column_i-1]==chessBoard[row_f][column_f]){
+                    return 1;
                 }
-                else if(chessBoard[row+2][column-1]==EMPTY_SQ){ 
-                    chessBoard[row+2][column-1]=BLACK_SQ;
-                }
-
             }
-            if (column != 7 && row < 6) {
-                if(chessBoard[row + 2][column + 1] == WHITE_SQ){
-                    chessBoard[row + 2][column + 1] =GREY_SQ;
+            if (column_i != 7 && row_i < 6) {
+                if(chessBoard[row_i + 2][column_i + 1] >=0 && chessBoard[row_i + 2][column_i + 1]==chessBoard[row_f][column_f]){
+                    return 1;
                 }
-                else if (chessBoard[row + 2][column + 1] == EMPTY_SQ) {
-                    chessBoard[row + 2][column + 1] = BLACK_SQ;
-                }
+                
             }
             
-            if (column != 0 && row > 1) {
-                if (chessBoard[row - 2][column - 1] == EMPTY_SQ) {
-                    chessBoard[row - 2][column - 1] = BLACK_SQ;
+            if (column_i != 0 && row_i > 1) {
+                if (chessBoard[row_i - 2][column_i - 1] >=0 && chessBoard[row_i - 2][column_i - 1]==chessBoard[row_f][column_f] ) {
+                    return 1;
                 }
-                else if(chessBoard[row - 2][column - 1] == WHITE_SQ){
-                    chessBoard[row - 2][column - 1] =GREY_SQ;
-                }
+                
             }
-            if (column != 7 && row > 1) {
-                if (chessBoard[row - 2][column + 1] == EMPTY_SQ) {
-                    chessBoard[row - 2][column + 1] = BLACK_SQ;
+            if (column_i != 7 && row_i > 1) {
+                if (chessBoard[row_i - 2][column_i + 1] >=0 && chessBoard[row_i - 2][column_i + 1]==chessBoard[row_f][column_f]) {
+                    return 1;
                 }
-                else if(chessBoard[row - 2][column + 1] == WHITE_SQ){
-                    chessBoard[row - 2][column + 1] =GREY_SQ;
-                }
+                
             }
-            if (column > 1 && row != 7) {
-                if (chessBoard[row + 1][column - 2] == EMPTY_SQ) {
-                    chessBoard[row + 1][column - 2] = BLACK_SQ;
+            if (column_i > 1 && row_i != 7) {
+                if (chessBoard[row_i + 1][column_i - 2] >=0 && chessBoard[row_i + 1][column_i - 2]==chessBoard[row_f][column_f] ) {
+                    return 1;
                 }
-                else if(chessBoard[row + 1][column - 2] == WHITE_SQ){
-                    chessBoard[row + 1][column - 2] =GREY_SQ;
-                }
+                
             }
-            if (column < 6 && row != 7) {
-                if (chessBoard[row + 1][column + 2] == EMPTY_SQ) {
-                    chessBoard[row + 1][column + 2] = BLACK_SQ;
+            if (column_i < 6 && row_i != 7) {
+                if (chessBoard[row_i + 1][column_i + 2] >=0 && chessBoard[row_i + 1][column_i + 2]==chessBoard[row_f][column_f]) {
+                    return 1;
                 }
-                else if(chessBoard[row + 1][column + 2] == WHITE_SQ){
-                    chessBoard[row + 1][column + 2] =GREY_SQ;
+                else if(chessBoard[row_i + 1][column_i + 2]>=0 && chessBoard[row_i + 1][column_i + 2]==chessBoard[row_f][column_f] ){
+                    return 1;
                 }
             }
 
-            if (column < 6 && row != 0) {
-                if (chessBoard[row - 1][column + 2] == EMPTY_SQ) {
-                    chessBoard[row - 1][column + 2] = BLACK_SQ;
+            if (column_i < 6 && row_i != 0) {
+                if (chessBoard[row_i - 1][column_i + 2] >=0 && chessBoard[row_i - 1][column_i + 2]==chessBoard[row_f][column_f] ) {
+                    return 1;
                 }
-                else if(chessBoard[row - 1][column + 2] ==WHITE_SQ){
-                    chessBoard[row - 1][column + 2] =GREY_SQ;
-                }
+                
             }
-            if (column > 1 && row != 0) {
-                if (chessBoard[row - 1][column - 2] == EMPTY_SQ) {
-                    chessBoard[row - 1][column - 2] = BLACK_SQ;
+            if (column_i > 1 && row_i != 0) {
+                if (chessBoard[row_i - 1][column_i - 2]>=0 && chessBoard[row_i - 1][column_i - 2]==chessBoard[row_f][column_f] ) {
+                    return 1;
                 }
-                else if(chessBoard[row - 1][column - 2] ==WHITE_SQ){
-                    chessBoard[row - 1][column - 2] =GREY_SQ;
-                }
+                
             }
         }
         else if(color==WHITE_KNIGHT){
-            if(column!=0 && row<6){
-                if(chessBoard[row+2][column-1]==BLACK_SQ){
-                    chessBoard[row+2][column-1]=GREY_SQ;
+            if(column_i!=0 && row_i<6){
+                if(chessBoard[row_i+2][column_i-1]<=0 && chessBoard[row_i+2][column_i-1]==chessBoard[row_f][column_f]){
+                    return 1;
                 }
-                else if(chessBoard[row+2][column-1]==EMPTY_SQ){ 
-                    chessBoard[row+2][column-1]=WHITE_SQ;
-                }
-
             }
-            if (column != 7 && row < 6) {
-                if(chessBoard[row + 2][column + 1] == BLACK_SQ){
-                    chessBoard[row + 2][column + 1] =GREY_SQ;
+            if (column_i != 7 && row_i < 6) {
+                if(chessBoard[row_i + 2][column_i + 1] <=0 && chessBoard[row_i + 2][column_i + 1]==chessBoard[row_f][column_f]){
+                    return 1;
                 }
-                else if (chessBoard[row + 2][column + 1] == EMPTY_SQ) {
-                    chessBoard[row + 2][column + 1] = WHITE_SQ;
-                }
+                
             }
             
-            if (column != 0 && row > 1) {
-                if (chessBoard[row - 2][column - 1] == EMPTY_SQ) {
-                    chessBoard[row - 2][column - 1] = WHITE_SQ;
+            if (column_i != 0 && row_i > 1) {
+                if (chessBoard[row_i - 2][column_i - 1] <=0 && chessBoard[row_i - 2][column_i - 1]==chessBoard[row_f][column_f] ) {
+                    return 1;
                 }
-                else if(chessBoard[row - 2][column - 1] == BLACK_SQ){
-                    chessBoard[row - 2][column - 1] =GREY_SQ;
-                }
+                
             }
-            if (column != 7 && row > 1) {
-                if (chessBoard[row - 2][column + 1] == EMPTY_SQ) {
-                    chessBoard[row - 2][column + 1] = WHITE_SQ;
+            if (column_i != 7 && row_i > 1) {
+                if (chessBoard[row_i - 2][column_i + 1] <=0 && chessBoard[row_i - 2][column_i + 1]==chessBoard[row_f][column_f]) {
+                    return 1;
                 }
-                else if(chessBoard[row - 2][column + 1] == BLACK_SQ){
-                    chessBoard[row - 2][column + 1] =GREY_SQ;
-                }
+                
             }
-            if (column > 1 && row != 7) {
-                if (chessBoard[row + 1][column - 2] == EMPTY_SQ) {
-                    chessBoard[row + 1][column - 2] = WHITE_SQ;
+            if (column_i > 1 && row_i != 7) {
+                if (chessBoard[row_i + 1][column_i - 2] <=0 && chessBoard[row_i + 1][column_i - 2]==chessBoard[row_f][column_f] ) {
+                    return 1;
                 }
-                else if(chessBoard[row + 1][column - 2] == BLACK_SQ){
-                    chessBoard[row + 1][column - 2] =GREY_SQ;
-                }
+                
             }
-            if (column < 6 && row != 7) {
-                if (chessBoard[row + 1][column + 2] == EMPTY_SQ) {
-                    chessBoard[row + 1][column + 2] = WHITE_SQ;
+            if (column_i < 6 && row_i != 7) {
+                if (chessBoard[row_i + 1][column_i + 2] <=0 && chessBoard[row_i + 1][column_i + 2]==chessBoard[row_f][column_f]) {
+                    return 1;
                 }
-                else if(chessBoard[row + 1][column + 2] == BLACK_SQ){
-                    chessBoard[row + 1][column + 2] =GREY_SQ;
+                else if(chessBoard[row_i + 1][column_i + 2]<=0 && chessBoard[row_i + 1][column_i + 2]==chessBoard[row_f][column_f] ){
+                    return 1;
                 }
             }
 
-            if (column < 6 && row != 0) {
-                if (chessBoard[row - 1][column + 2] == EMPTY_SQ) {
-                    chessBoard[row - 1][column + 2] = WHITE_SQ;
+            if (column_i < 6 && row_i != 0) {
+                if (chessBoard[row_i - 1][column_i + 2] <=0 && chessBoard[row_i - 1][column_i + 2]==chessBoard[row_f][column_f] ) {
+                    return 1;
                 }
-                else if(chessBoard[row - 1][column + 2] ==BLACK_SQ){
-                    chessBoard[row - 1][column + 2] =GREY_SQ;
-                }
+                
             }
-            if (column > 1 && row != 0) {
-                if (chessBoard[row - 1][column - 2] == EMPTY_SQ) {
-                    chessBoard[row - 1][column - 2] = WHITE_SQ;
+            if (column_i > 1 && row_i != 0) {
+                if (chessBoard[row_i - 1][column_i - 2]<=0 && chessBoard[row_i - 1][column_i - 2]==chessBoard[row_f][column_f] ) {
+                    return 1;
                 }
-                else if(chessBoard[row - 1][column - 2] ==BLACK_SQ){
-                    chessBoard[row - 1][column - 2] =GREY_SQ;
-                }
+                
             }
 
         }
@@ -341,7 +336,7 @@ int processKnightMoves(int color,int chessBoard[8][8],int row,int column){
 int processPawnMoves(int color,int chessBoard[8][8],int row_i,int column_i,int row_f,int column_f){
 
     if(color==WHITE_PAWN){
-        if (chessBoard[row_i+1][column_i]==EMPTY_SQ &&row_i!=7 &&(row_f-row_i==1) &&(column_f==column_i)){
+        if (chessBoard[row_i+1][column_i]==EMPTY_SQ&&row_i!=7 &&(row_f-row_i==1) &&(column_f==column_i)){
             return 1;
             }
         else if(chessBoard[row_i+1][column_i+1]<0 && row_i!=7 && column_i!=7 &&(row_f-row_i==1) &&(column_f-column_i)==1){
@@ -378,20 +373,15 @@ int white_in_check(int chessBoard[8][8]){
 
 
                 }
-                else if((chessBoard[row][column])==WHITE_KNIGHT){
-                    processKnightMoves(WHITE_KNIGHT,chessBoard,row,column);
-
+                
                 }
-                else if((chessBoard[row][column])==BLACK_KNIGHT){
-                    processKnightMoves(BLACK_KNIGHT,chessBoard,row,column);
-
-                }
+                
             }
         }
 
 
 
-}
+
 
 int black_in_check(int chessBoard[8][8]){
     return 0;
