@@ -25,6 +25,8 @@
         
         3-CREATE PIECES
 
+        00 01 02 03 04 05 06 07
+
         
                                                                                                                                                                                                         */
 
@@ -50,6 +52,8 @@ void displayBoard(int chessBoard[8][8]);
 int processPawnMoves(int color,int chessBoard[8][8],int row_i,int column_i,int row_f,int column_f);
 
 int processKnightMoves(int color,int chessBoard[8][8],int row,int column,int row_f,int column_f);
+
+int processBishopMoves(int color,int chessBoard[8][8],int row_i,int column_i,int row_f,int column_f);
 
 int white_in_check(int chessBoard[8][8]);
 int black_in_check(int chessBoard[8][8]);
@@ -361,6 +365,64 @@ int processPawnMoves(int color,int chessBoard[8][8],int row_i,int column_i,int r
     return 0;
 }
 
+int processBishopMoves(int color,int chessBoard[8][8],int row_i,int column_i,int row_f,int column_f){
+    
+    if(color==WHITE_BISHOP){
+        for(int row=row_i,column=column_i;column<8&&row>-1;row--,column++){
+            int col;
+            if((chessBoard[row][column]!=0)){
+                if(chessBoard[row_f][column_f]==chessBoard[row][column]&&col==0){
+                    return 1;
+                }
+                else{
+                    break;
+                }
+
+            }
+            
+        }
+        for(int row=row_i,column=column_i;column>-1&&row>=0;row--,column--){
+            if((chessBoard[row][column]!=0)){
+                if(chessBoard[row_f][column_f]==chessBoard[row][column]){
+                    return 1;
+                }
+                else{
+                    break;
+                }
+
+            }
+
+        }
+        for(int row=row_i,column=column_i;column>-1&&row<8;row++,column--){
+            if((chessBoard[row][column]!=0)){
+                if(chessBoard[row_f][column_f]==chessBoard[row][column]){
+                    return 1;
+                }
+                else{
+                    break;
+                }
+
+            }
+        }
+        for(int row=row_i,column=column_i;column<8&&row<8;row++,column++){
+            if((chessBoard[row][column]!=0)){
+                if(chessBoard[row_f][column_f]==chessBoard[row][column]){
+                    return 1;
+                }
+                else{
+                    break;
+                }
+
+            }
+
+        }
+        
+    }
+    else if(color==BLACK_BISHOP){
+        
+
+    }
+}
 
 int white_in_check(int chessBoard[8][8]){
     return 0;
@@ -378,10 +440,6 @@ int white_in_check(int chessBoard[8][8]){
                 
             }
         }
-
-
-
-
 
 int black_in_check(int chessBoard[8][8]){
     return 0;
